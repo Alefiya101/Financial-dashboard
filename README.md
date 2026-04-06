@@ -1,8 +1,67 @@
-🏦 Financial Dashboard APIA high-precision, scalable Spring Boot backend for managing personal finances. This API handles transaction tracking, real-time analytics, and data persistence with an emphasis on Financial Integrity and Enterprise Scalability.🚀 Key Technical Features1. High-Precision Financial MathUnlike standard applications that use double or float, this system utilizes java.math.BigDecimal for all monetary values.Why: To prevent "Floating Point Errors" (binary rounding issues) that occur in standard arithmetic.Implementation: Used Custom Stream Reductions (.reduce(BigDecimal.ZERO, BigDecimal::add)) to ensure every cent is accounted for in summaries and trends.2. Enterprise PaginationTo ensure the system remains performant as the database grows, the records endpoint is fully paginated.Feature: Supports page, size, and dynamic Sort parameters.Benefit: Prevents memory overflow by only loading a slice of data (e.g., 10 records) instead of the entire database.3. Logic-Based "Soft Delete"Implemented a Soft Delete pattern where records are never permanently destroyed.Mechanism: A boolean is_deleted column tracks state.Advantage: Maintains a complete audit trail for compliance while keeping the user's view clean. All calculation queries automatically filter out these records.4. Automated Analytics EngineThe service layer includes a math engine that transforms raw rows into actionable insights:Dashboard Summary: Aggregates total income, expenses, and net balance.Categorical Breakdown: Groups spending by category (Food, Rent, etc.).12-Month Trend: Pre-fills a 12-month data set to ensure frontend charts (like Chart.js) render a continuous timeline.🛠️ Tech StackJava 17Spring Boot 3.x (Web, JPA)MySQL (Persistence)Maven (Dependency Management)Lombok (Boilerplate reduction)📂 API EndpointsFinancial RecordsMethodEndpointDescriptionPOST/api/recordsCreate a new income/expense entry.GET/api/records/user/{id}Get paginated records (Params: page, size).DELETE/api/records/{id}Soft delete a specific record.GET/api/records/export/{id}Download all active records as a CSV file.Analytics & ReportsMethodEndpointDescriptionGET/api/records/user-summary/{id}Get total Balance, Income, and Expense.GET/api/records/trend/{id}/{year}Get 12-month data for yearly charts.⚙️ Database RequirementsTo support the soft-delete and high-precision features, the financial_records table includes:amount: DECIMAL(19,2) (To map to BigDecimal)is_deleted: BOOLEAN (Default: false)created_at: TIMESTAMP (For trend sorting)🧪 How to Test (Postman)Import the Collection: Add the base URL http://localhost:8081.Create Data: Send a POST with a JSON body:JSON{
+🏦 Financial Dashboard API
+
+A high-precision, scalable Spring Boot backend for managing personal finances. This API handles transaction tracking, real-time analytics, and data persistence with a strong emphasis on Financial Integrity and Enterprise Scalability.
+
+🚀 Key Technical Features
+
+1. High-Precision Financial Math
+Unlike standard applications that use double or float, this system utilizes java.math.BigDecimal for all monetary values.
+
+Why: Prevents floating point errors (binary rounding issues).
+Implementation: Uses custom stream reductions:
+.reduce(BigDecimal.ZERO, BigDecimal::add)
+Impact: Ensures every cent is accurately accounted for.
+
+2. Enterprise Pagination
+Supports page, size, and dynamic sort parameters.
+Loads only required records to prevent memory overflow.
+
+3. Logic-Based Soft Delete
+Uses is_deleted boolean column.
+Maintains audit trail and keeps UI clean.
+
+4. Automated Analytics Engine
+- Dashboard Summary: total income, expenses, balance
+- Category Breakdown
+- 12-month trend for charts
+
+🛠️ Tech Stack
+Java 17
+Spring Boot 3.x
+MySQL
+Maven
+Lombok
+
+📂 API Endpoints
+
+Financial Records:
+POST /api/records
+GET /api/records/user/{id}
+DELETE /api/records/{id}
+GET /api/records/export/{id}
+
+Analytics:
+GET /api/records/user-summary/{id}
+GET /api/records/trend/{id}/{year}
+
+⚙️ Database
+amount: DECIMAL(19,2)
+is_deleted: BOOLEAN
+created_at: TIMESTAMP
+
+🧪 Testing
+Base URL: http://localhost:8081
+
+Sample JSON:
+{
   "amount": 1500.50,
   "type": "INCOME",
   "category": "Salary",
   "description": "Monthly Pay",
-  "user": {"id": 1}
+  "user": { "id": 1 }
 }
-Verify Summary: Call the /user-summary/{id} endpoint to see the BigDecimal math in action.Test Export: Open the /export/{id} link in a browser to trigger the CSV download.Developed by: Alefiya HiraniFocus: Backend Engineering & Financial Data Integrity
+
+👨‍💻 Developed By
+Alefiya Hirani
+Focus: Backend Engineering & Financial Data Integrity
+
