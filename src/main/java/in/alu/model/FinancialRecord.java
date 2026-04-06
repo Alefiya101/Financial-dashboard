@@ -25,6 +25,9 @@ public class FinancialRecord {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+    
+    @Column
+    private boolean deleted=false;
 
     // 1. No-args Constructor
     public FinancialRecord() {}
@@ -60,4 +63,14 @@ public class FinancialRecord {
 
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
+    
+   ;
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
 }
